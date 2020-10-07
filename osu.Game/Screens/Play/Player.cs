@@ -62,6 +62,8 @@ namespace osu.Game.Screens.Play
 
         public Action RestartRequested;
 
+        public Action NormalCompletion;
+
         public bool HasFailed { get; private set; }
 
         private Bindable<bool> mouseWheelDisabled;
@@ -475,7 +477,13 @@ namespace osu.Game.Screens.Play
 
             ValidForResume = false;
 
-            if (!showResults) return;
+            NormalCompletion?.Invoke();
+
+            if (!showResults) {
+              using (BeginDelayedSequence(RESULTS_DISPLAY_DELAY))
+                completionProgressDelegate = Schedule(performImmediateExit);
+              return;
+            }
 
             using (BeginDelayedSequence(RESULTS_DISPLAY_DELAY))
                 completionProgressDelegate = Schedule(GotoRanking);

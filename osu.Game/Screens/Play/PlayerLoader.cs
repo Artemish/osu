@@ -53,6 +53,8 @@ namespace osu.Game.Screens.Play
 
         private bool backgroundBrightnessReduction;
 
+        private bool doRestart;
+
         protected bool BackgroundBrightnessReduction
         {
             set
@@ -261,6 +263,7 @@ namespace osu.Game.Screens.Play
             player = createPlayer();
             player.RestartCount = restartCount;
             player.RestartRequested = restartRequested;
+            player.NormalCompletion = normalCompletion;
 
             LoadTask = LoadComponentAsync(player, _ => MetadataInfo.Loading = false);
         }
@@ -269,6 +272,13 @@ namespace osu.Game.Screens.Play
         {
             hideOverlays = true;
             ValidForResume = true;
+            doRestart = true;
+        }
+
+        private void normalCompletion()
+        {
+            ValidForResume = true;
+            doRestart = false;
         }
 
         private void contentIn()
