@@ -153,6 +153,9 @@ namespace osu.Game.Screens.Play
         {
             base.OnEntering(last);
 
+            foreach (var mod in Mods.Value.OfType<IApplicableToPlayerLoader>())
+                mod.ApplyToPlayerLoader(this);
+
             content.ScaleTo(0.7f);
             Background?.FadeColour(Color4.White, 800, Easing.OutQuint);
 
