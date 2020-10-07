@@ -154,6 +154,7 @@ namespace osu.Game.Rulesets.Osu
                         new MultiMod(new OsuModGrow(), new OsuModDeflate()),
                         new MultiMod(new ModWindUp(), new ModWindDown()),
                         new OsuModTraceable(),
+                        new OsuModEndless(),
                     };
 
                 case ModType.System:

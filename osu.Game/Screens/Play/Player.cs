@@ -117,8 +117,8 @@ namespace osu.Game.Screens.Play
         /// </summary>
         protected virtual bool CheckModsAllowFailure() => Mods.Value.OfType<IApplicableFailOverride>().All(m => m.PerformFail());
 
-        private readonly bool allowPause;
-        private readonly bool showResults;
+        public bool allowPause;
+        public bool showResults;
 
         /// <summary>
         /// Create a new player instance.

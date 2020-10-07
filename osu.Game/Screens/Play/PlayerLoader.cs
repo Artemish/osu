@@ -11,8 +11,10 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input;
+using osu.Framework.Utils;
 using osu.Framework.Screens;
 using osu.Framework.Threading;
+using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
@@ -22,6 +24,7 @@ using osu.Game.Overlays.Notifications;
 using osu.Game.Screens.Menu;
 using osu.Game.Screens.Play.PlayerSettings;
 using osu.Game.Users;
+using osu.Game.Rulesets.Mods;
 using osuTK;
 using osuTK.Graphics;
 
@@ -80,6 +83,8 @@ namespace osu.Game.Screens.Play
 
         private readonly Func<Player> createPlayer;
 
+        public Func<BeatmapManager, BeatmapInfo> selectNextBeatmap; 
+          
         private Player player;
 
         private LogoTrackingContainer content;
@@ -100,6 +105,9 @@ namespace osu.Game.Screens.Play
 
         [Resolved]
         private AudioManager audioManager { get; set; }
+
+        [Resolved]
+        private BeatmapManager beatmaps { get; set; }
 
         public PlayerLoader(Func<Player> createPlayer)
         {
@@ -173,9 +181,24 @@ namespace osu.Game.Screens.Play
         {
             base.OnResuming(last);
 
+            if (!doRestart) {
+              prepareNextBeatmap();
+            }
+
             contentIn();
 
             this.Delay(400).Schedule(pushWhenLoaded);
+        }
+
+        private void prepareNextBeatmap() {
+            var new_map = selectNextBeatmap?.Invoke(beatmaps);
+
+            if (new_map != null) {
+              WorkingBeatmap b = beatmaps.GetWorkingBeatmap(new_map);
+
+              Beatmap.Value = b;
+            }
+
         }
 
         public override void OnSuspending(IScreen next)
